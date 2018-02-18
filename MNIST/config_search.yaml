@@ -1,0 +1,43 @@
+use_owl: False
+use_growl: True
+use_group_lasso: False
+use_mask: True
+
+n_input: 784
+n_class: 10
+
+batch_size: 128
+num_epochs: 40
+
+# Retraining
+retraining: True
+num_epochs_retrain: 40
+
+learning_rate: 0.0001
+learning_rate_vec: [0.0001, 0.00005]
+learning_rate_decay_factor: 0.96
+num_epochs_per_decay: 30
+
+
+grid_search_reg_params: True
+# OWL params setup
+# the type of OWL parameters, currently we are using OSCAR, but other types
+# may be implemented in the future
+reg_params_type: 'OSCAR'
+owl_applied_layers: [False, True, True, True, False]
+prox_update_iter: False # if set to true, will update every iterations, otherwise every epoch
+
+
+conv_reg_type: 4
+
+similarity: 'norm_euclidean'
+
+#
+mask_update_freq: 1
+display_prune_total: True
+display_similarity: 20
+
+results_dir: '../results/accur_compress_ratio/GrOWL_1205_conv2/'
+summaries_dir: '../results/summaries/GrOWL_1205_conv2/'
+plots_dir: '../results/plots/GrOWL_1205_conv2/'
+tensorboard_freq: 200
