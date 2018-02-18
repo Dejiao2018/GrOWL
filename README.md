@@ -14,7 +14,7 @@ Dejiao Zhang*, Haozhu Wang*, Mario Figueiredo, Laura Balzano (*Co-first author)
     You can switch to different regularizers by changing the configuration info in flags.py
     
 ## Dependencies:
-Tensorflow 1.0.0
+Tensorflow 1.0.0  
 Numpy   
 Scipy  
 Matplotlib  
