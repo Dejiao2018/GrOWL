@@ -26,8 +26,8 @@ Dejiao Zhang*, Haozhu Wang*, Mario Figueiredo, Laura Balzano (*Co-first author)
     To run the the above codes successfully, please modify the "file_names" and "log_root" in the code to match your local files. 
 
 ## Dependencies:
-Tensorflow 1.0.0
-Numpy 1.14.0
-Scipy 1.0.0
-Matplotlib 2.1.0
-Scikit-learn 0.19.1
+Tensorflow 1.0.0  
+Numpy 1.14.0  
+Scipy 1.0.0  
+Matplotlib 2.1.0  
+Scikit-learn 0.19.1  
