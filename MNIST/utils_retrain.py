@@ -170,10 +170,7 @@ def display_similarity(sess, epoch, get_group, config):
 
         # Cluster the paramter matrix with affinity propagation
         if num_nonzero_rows > 0:
-            if config['similarity'] == 'euclidean':
-                af = AffinityPropagation().fit(nonzero_param_val)
-            elif config['similarity'] == 'norm_euclidean':
-                # af = AffinityPropagation(affinity='precomputed').fit(similarity_val)
+            if config['similarity'] == 'norm_euclidean':
                 af = AffinityPropagation(affinity='precomputed', preference=config['preference']).fit(display_similarity_val_partial)
 
             cluster_centers_indices = af.cluster_centers_indices_
