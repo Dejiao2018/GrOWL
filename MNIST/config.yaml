@@ -41,19 +41,8 @@ prox_update_iter: False # if set to true, will update every iterations, otherwis
 # growl_params: [[1e-1, 5e-2], [1e-1, 5e-3], [1e-1, 1e-2], [1e-1, 2.5e-2], [1e-1, 1e-3]]
 
 # Single hidden layer or 300-100 layer
-# owl_params: [[1e0, 1e-2], [2e0, 1e-2], [1e1, 1e-2],[1e1, 1e-2],[1e-1, 1e-3]]
-# growl_params: [[10e0, 0.3], [5e0, 5e-2], [1e1, 1e-2], [1e1, 1e-2], [1e-1, 1e-3]]
-# growl_params: [[200e0, 0.87], [5e0, 5e-2], [1e1, 1e-2], [1e1, 1e-2], [1e-1, 1e-3]]
-# growl_params: [[330e0, 0], [5e0, 5e-2], [1e1, 1e-2], [1e1, 1e-2], [1e-1, 1e-3]]
-# growl_params: [[82e0, 0], [5e0, 5e-2], [1e1, 1e-2], [1e1, 1e-2], [1e-1, 1e-3]]
-# owl_params: [[1e0, 1e-2], [2e0, 1e-2], [1e1, 1e-2],[1e1, 1e-2],[1e-1, 1e-3]]
-# growl_params: [[1, 2e-2], [3e-1, 3e-3], [1e1, 1e-2], [1e1, 1e-2], [1e-1, 1e-3]]
 growl_params: [[1e-20, 1e-20], [3e-1, 3e-3], [1e1, 1e-2], [1e1, 1e-2], [1e-1, 1e-3]]
-# growl_params: [[1.5e0, 0], [3e0, 0], [1e1, 1e-2], [1e1, 1e-2], [1e-1, 1e-3]]
 
-# # Baseline parameters
-# owl_params: [[5e-20, 5e-30], [5e-20, 5e-30], [5e-20, 5e-30],[5e-20, 5e-30],[5e-20, 5e-30]]
-# growl_params: [[5e-20, 5e-30], [5e-20, 5e-30], [5e-20, 5e-30], [5e-20, 5e-30], [5e-20, 5e-30]]
 
 grid_search_reg_params: False
 

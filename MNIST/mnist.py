@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 from networks import LeNet_single, LeNet_300_100, LeNet_cnn
 from utils_OWL import reg_params_init, apply_owl_prox, update_mask
 from utils_plot import imagesc, cluster_plot, accuracy_compression_plot
-from utils_retrain import display_similarity, freeze_param
+from utils_retrain import display_similarity
 
 import tensorflow.examples.tutorials.mnist.input_data as input_data
 mnist_data = input_data.read_data_sets("../datasets/MNIST_data", one_hot=True)
@@ -166,10 +166,6 @@ def train_mnist(config):
                         # apply OWL to weights every iteration
                         apply_owl_prox(sess, lr, layer_owl_params, config)
 
-                # reset the momentum acculation
-                # momentum_initializer = [var.initializer for var in tf.global_variables() if 'Momentum' in var.name]
-                # sess.run(momentum_initializer)
-                # print("mom_init_shape {}".format(len(momentum_initializer)))
 
                 if (not config['prox_update_iter']) & (config['use_growl'] | config['use_group_lasso']):
                     # apply OWL to weights every epoch
@@ -236,9 +232,6 @@ def train_mnist(config):
             # save the final trained model
             saver.save(sess, config['summary_dir']+'train_model/train_model_final.ckpt')
 
-            ##TODO: freeze the masked paramters.
-
-            freeze_param(sess, config)
             #######################################################################
             # Retraining
             #######################################################################

@@ -227,20 +227,3 @@ def group_averaging(param_val_masked, group_info):
         param_val_avg[group_i, :] = avg_param_i
 
     return param_val_avg
-
-
-def freeze_param(sess, config):
-
-    # get weights of the network
-    weight_placeholders = utils_nn.get_weight_placeholders()
-
-    for idx, weight_triple in enumerate(weight_placeholders):
-
-        if not config['owl_applied_layers'][idx]:
-            continue
-
-        param_i, param_placeholder_i, param_assign_op_i = weight_triple
-
-        # freeze the parameters with zero value. It's not likely to have
-        # zeros in the unpruned rows, so we just pick out all zeros and freeze
-        param_i = tf.where(param_i == 0, tf.stop_gradient(param_i), param_i)

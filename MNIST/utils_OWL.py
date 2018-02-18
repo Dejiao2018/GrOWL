@@ -54,46 +54,22 @@ def reg_params_init(sess, config):
 
         param_i, placeholder_i, assign_op_i = triple
 
-        # OWL weights should be applied to the columns of the weight matrix
+        # OWL weights should be applied to the rows of the weight matrix
         param_shape = sess.run(tf.shape(param_i))
 
-        if config['use_owl']:
-            reg_params = config['owl_params']
-        else:
+        if:
             reg_params = config['growl_params']
 
-        # for fully connected layers
-        if np.size(param_i.get_shape().as_list()) == 2:
 
-            lambda_1 = np.float32(reg_params[idx][0])
-            lambda_2 = np.float32(reg_params[idx][1])
-            if (lambda_1 < 0) | (lambda_2 < 0):
-                raise Exception('regularization parameters must be non-negative')
+        lambda_1 = np.float32(reg_params[idx][0])
+        lambda_2 = np.float32(reg_params[idx][1])
+        if (lambda_1 < 0) | (lambda_2 < 0):
+            raise Exception('regularization parameters must be non-negative')
 
-            #OSCAR type parameters: lambda_i = lambda_1 + (n - i) * lambda_2
-            if config['reg_params_type'] == 'OSCAR':
-                param_index = np.linspace(start=param_shape[0]-1, stop=0, num=param_shape[0])
-                layer_owl_params.append(lambda_1 + lambda_2 * param_index)
-
-            elif config['reg_params_type'] == 'PLD': # partiial linear decreasing
-                if config['PLD_transition'] != 0:
-                    transition_ind = np.floor(param_shape[0]*config['PLD_transition']) -1
-                else:
-                    transition_ind = min_num_row
-                param_index = np.linspace(start=transition_ind-1, stop=0, num=transition_ind)
-                param_index = np.append(param_index, np.zeros([1, int(param_shape[0]-transition_ind)]))
-                layer_owl_params.append(lambda_1 + lambda_2 * param_index)
-                print(np.max(lambda_1 + lambda_2 * param_index))
-
-        # for convolutional layers
-        elif np.size(param_i.get_shape().as_list()) == 4:
-            #OSCAR type parameters: lambda_i = lambda_1 + (n - i) * lambda_2
-
-            lambda_1 = np.float32(reg_params[idx][0])
-            lambda_2 = np.float32(reg_params[idx][1])
-            if (lambda_1 < 0) | (lambda_2 < 0):
-                raise Exception('regularization parameters must be non-negative')
-
+        # calculate row_num
+        if np.size(param_i.get_shape().as_list()) == 2: # fc layer
+            row_num = param_shape[0]
+        elif np.size(param_i.get_shape().as_list()) == 4: # conv layer
             # calculate the number of rows according to the regularization type
             if config['conv_reg_type'] == 1:
                 row_num = param_shape[3]
@@ -106,17 +82,17 @@ def reg_params_init(sess, config):
             else:
                 raise Exception('Please specify the regularization type for convolutional layers')
 
-            if config['reg_params_type'] == 'OSCAR':
-                param_index = np.linspace(start=row_num-1, stop=0, num=row_num)
-                layer_owl_params.append(lambda_1 + lambda_2 * param_index)
-            elif config['reg_params_type'] == 'PLD':
-                if config['PLD_transition'] != 0:
-                    transition_ind = np.floor(param_shape[0]*config['PLD_transition']) -1
-                else:
-                    transition_ind = min_num_row
-                param_index = np.linspace(start=row_num-1, stop=0, num=row_num)
-                param_index = np.append(param_index, np.zeros([1, param_shape[0]-transition_ind]))
-                layer_owl_params.append(lambda_1 + lambda_2 * param_index)
+        if config['reg_params_type'] == 'OSCAR':
+            param_index = np.linspace(start=row_num-1, stop=0, num=row_num)
+            layer_owl_params.append(lambda_1 + lambda_2 * param_index)
+        elif config['reg_params_type'] == 'PLD':
+            if config['PLD_transition'] != 0:
+                transition_ind = np.floor(param_shape[0]*config['PLD_transition']) -1
+            else:
+                transition_ind = min_num_row
+            param_index = np.linspace(start=row_num-1, stop=0, num=row_num)
+            param_index = np.append(param_index, np.zeros([1, param_shape[0]-transition_ind]))
+            layer_owl_params.append(lambda_1 + lambda_2 * param_index)
 
     assert len(layer_owl_params) == len(weight_placeholder)
 
