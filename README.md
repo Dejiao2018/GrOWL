@@ -1,7 +1,8 @@
 # GrOWL
 ## Learning to share: simultaneously parameter tying and sparsification in deep learning
 
-Dejiao Zhang*, Haozhu Wang*, Mario Figueiredo, Laura Balzano (*Co-first author)
+Dejiao Zhang*, Haozhu Wang*, Mario Figueiredo, Laura Balzano (*Co-first author)  
+https://openreview.net/pdf?id=rypT3fb0b
 
 ## To run the code:
 ### 1. Complie the the c code in ./owl_projection by the following:
