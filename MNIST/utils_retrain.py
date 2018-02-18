@@ -1,11 +1,6 @@
 '''
 This modules contains functions necessary for retraining the model after the
 initial training with OWL or group OWL
-
-    1. get_group_info_owl
-    2. retrain_owl
-    3. get_group_info_growl
-    4. retrain_group_owl
 '''
 from __future__ import division, print_function, absolute_import
 import sys
@@ -35,9 +30,9 @@ def display_similarity(sess, epoch, get_group, config):
         epoch: current epoch
 
     Return:
-        num_nonzero_rows_tuple:
-        num_clusters_tuple:
-        group_info:
+        num_nonzero_rows_tuple: # of nonzero rows for each layer
+        num_clusters_tuple: # of clusters for each layer
+        group_info: list of tuples containing the rows indices of each group
 
     '''
 
@@ -155,18 +150,6 @@ def display_similarity(sess, epoch, get_group, config):
         plt.title('Similarity histogram at epoch {}'.format(epoch+1))
         plt.savefig(config['plot_dir'] + 'layer{}_train_sim_{}.jpg'.format(idx, epoch))
         plt.close()
-
-        # construct the nonzero display_similarity array for affinity propagation
-        # print('nonzero similarity {}'.format(nonzero_display_similarity_val_arr.size))
-        # nonzero_sim_matsize = np.sqrt(nonzero_display_similarity_val_arr.size)
-        # assert np.sqrt(nonzero_display_similarity_val_arr.size) == nonzero_row_idx.size, 'the nonzero numbers obtained from similiary values does not match true nonzero rows'
-        # nonzero_display_similarity = np.reshape(nonzero_display_similarity_val_arr, [nonzero_sim_matsize, nonzero_sim_matsize])
-
-
-
-        # # zip the original row indices with new indices range(nonzero_sim_matsize)
-        # row_sim_dict = list(zip(nonzero_row_idx, range(len(nonzero_row_idx))))
-
 
         # Cluster the paramter matrix with affinity propagation
         if num_nonzero_rows > 0:
