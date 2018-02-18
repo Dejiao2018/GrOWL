@@ -9,8 +9,8 @@ Dejiao Zhang*, Haozhu Wang*, Mario Figueiredo, Laura Balzano (*Co-first author)
 
 
 # Dependancies:
-Tensorflow \\
-Numpy \\
-Scipy \\
-Matplotlib \\
-Sklearn
+> Tensorflow 
+> Numpy 
+> Scipy 
+ Matplotlib 
+ Sklearn
