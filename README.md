@@ -26,7 +26,8 @@ https://openreview.net/pdf?id=rypT3fb0b
     python gen_fig5.py (generate figure 5)
     python gen_fig6.py (generate figure 6)
 
-    To run the the above codes successfully, please modify the "file_names" and "log_root" in the code to match your local files. 
+    To run the the above codes successfully, please modify the "file_names" and "log_root"   
+    in the code to match your local files. 
 
 ## Dependencies:
 Tensorflow 1.0.0  
