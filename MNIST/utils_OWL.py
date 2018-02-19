@@ -2,11 +2,6 @@
 '''
 This modules contains functions necessary for applying group OWL
 to the parameters
-    1. reshape_2D_4D
-    2. reg_params_init
-    3. apply_growl
-    4. apply_owl_prox
-    5. update_mask
 '''
 
 from __future__ import division, print_function, absolute_import
@@ -19,7 +14,6 @@ import utils_nn
 from projectedOWL import proxOWL
 from numpy.linalg import norm
 from utils_retrain import group_averaging
-from utils_general import reshape_2D_4D
 import matplotlib.pyplot as plt
 from utils_plot import hist_plot
 
@@ -48,7 +42,6 @@ def reg_params_init(sess, config):
             if param_shape[0] < min_num_row:
                 min_num_row = param_shape[0]
 
-
     # iterates through all layers, idx is the layer number
     for idx, triple in enumerate(weight_placeholder):
 
@@ -57,41 +50,23 @@ def reg_params_init(sess, config):
         # OWL weights should be applied to the rows of the weight matrix
         param_shape = sess.run(tf.shape(param_i))
 
-        if:
-            reg_params = config['growl_params']
-
+        reg_params = config['growl_params']
 
         lambda_1 = np.float32(reg_params[idx][0])
         lambda_2 = np.float32(reg_params[idx][1])
         if (lambda_1 < 0) | (lambda_2 < 0):
             raise Exception('regularization parameters must be non-negative')
 
-        # calculate row_num
-        if np.size(param_i.get_shape().as_list()) == 2: # fc layer
-            row_num = param_shape[0]
-        elif np.size(param_i.get_shape().as_list()) == 4: # conv layer
-            # calculate the number of rows according to the regularization type
-            if config['conv_reg_type'] == 1:
-                row_num = param_shape[3]
-            elif config['conv_reg_type'] == 2:
-                row_num = param_shape[2]
-            elif config['conv_reg_type'] == 3:
-                row_num = np.prod(param_shape[2:])
-            elif config['conv_reg_type'] == 4:
-                row_num = row_num = np.prod(param_shape[:3])
-            else:
-                raise Exception('Please specify the regularization type for convolutional layers')
+        # get row_num
+        row_num = int(param_shape[0])
 
-        if config['reg_params_type'] == 'OSCAR':
-            param_index = np.linspace(start=row_num-1, stop=0, num=row_num)
-            layer_owl_params.append(lambda_1 + lambda_2 * param_index)
-        elif config['reg_params_type'] == 'PLD':
+        if config['reg_params_type'] == 'PLD':
             if config['PLD_transition'] != 0:
                 transition_ind = np.floor(param_shape[0]*config['PLD_transition']) -1
             else:
                 transition_ind = min_num_row
             param_index = np.linspace(start=row_num-1, stop=0, num=row_num)
-            param_index = np.append(param_index, np.zeros([1, param_shape[0]-transition_ind]))
+            param_index = np.append(param_index, np.zeros([1, int(param_shape[0]-transition_ind)]))
             layer_owl_params.append(lambda_1 + lambda_2 * param_index)
 
     assert len(layer_owl_params) == len(weight_placeholder)
@@ -170,26 +145,10 @@ def apply_owl_prox(sess, learning_rate, layer_reg_params, config):
         param_val = sess.run(param_i)
         dim_i = np.size(param_val.shape)
 
-        if dim_i == 2:
-            # if the weight tensor is 2 dimensional, then it's fc layer
-            if config['use_growl']:
-                prox_param_val = apply_growl(param_val, learning_rate_val * layer_reg_params[idx])
-            else:
-                prox_param_val = apply_group_lasso(param_val, learning_rate_val * layer_reg_params[idx])
-
-        elif dim_i == 4:
-            # If the weight tensor is 4-dimensional, then it's the convolutional layer
-            # For convolutional layer, we need to first reshape 4D tensor to 2D matrix
-            reduced_param_val = reshape_2D_4D(param_val, target_shape=None, reshape_type=2,
-                                              reshape_order='F', config=config)
-            if config['use_growl']:
-                reduced_prox_param_val = apply_growl(reduced_param_val, learning_rate_val * layer_reg_params[idx] * np.sqrt(np.shape(reduced_param_val)[1]))
-            else:
-                reduced_prox_param_val = apply_group_lasso(reduced_param_val, learning_rate_val * layer_reg_params[idx] * np.sqrt(np.shape(reduced_param_val)[1]))
-
-            #Now reshape the 2D matrix back to 4D tensor
-            prox_param_val = reshape_2D_4D(reduced_prox_param_val, target_shape=param_val.shape,
-                                           reshape_type=1, reshape_order='F', config=config)
+        if config['use_growl']:
+            prox_param_val = apply_growl(param_val, learning_rate_val * layer_reg_params[idx])
+        else:
+            prox_param_val = apply_group_lasso(param_val, learning_rate_val * layer_reg_params[idx])
 
         # assign the new weights to param_i using the assign_op_i
         # refer to utils_nn.py for details of assign_op_i
@@ -246,32 +205,27 @@ def update_mask(sess, epoch, learning_rate, threshold, phase, config, group_info
 
         learning_rate_val = sess.run(learning_rate)
 
-        # if apply to convolutional layer, compute the reshaped matrix
-        if np.size(dim_i) == 4:
-
-            # first reshape the 4 dimensional tensor into a matrix
-            param_val_masked_reshaped = reshape_2D_4D(param_val_masked, target_shape=None, reshape_type=2,
-                                              reshape_order='F', config=config)
-            # param_val_masked_reshaped = np.reshape(param_val_masked, (dim_i[3], np.prod(dim_i[0:3])))
+        # for fully connected layer
+        if config['use_growl'] | config['use_group_lasso']:
 
             # This is the pruning process
-            row_norm = norm(param_val_masked_reshaped, axis=1)
+            row_norm = norm(param_val_masked, axis=1)
             print('min row norm {:.4f}'.format(np.min(row_norm)))
             print('current epoch {}'.format(epoch+1))
             if epoch==0 or (epoch+1) % config['row_norm_freq'] == 0:
                 hist_plot(idx, epoch, phase, row_norm[row_norm>0], config)
 
             zero_row_idx = np.where(row_norm <=threshold)
-            print('masked neurons: {}; total neurons: {}'.format(np.size(zero_row_idx), np.size(row_norm)))
-            param_val_masked_reshaped[zero_row_idx[0], :] = 0
 
-            # in retraining process, enforce parameter sharing
+            nonzero_row_idx = np.where(row_norm > threshold)
+            np.save(config['plot_dir']+'nonzero_row_idx.npy', nonzero_row_idx)
+
+            print('masked rows: {}; total rows: {}'.format(np.size(zero_row_idx), np.size(row_norm)))
+            param_val_masked[zero_row_idx[0], :] = 0
+
+            # in retraining process, enforce parameter sharing, do not update the mask
             if phase:
-                param_val_masked_reshaped = group_averaging(param_val_masked_reshaped, group_info[idx_true_layer])
-
-            #Now reshape the 2D matrix back to 4D tensor
-            param_val_masked = reshape_2D_4D(param_val_masked_reshaped, target_shape=tuple(dim_i),
-                                           reshape_type=1, reshape_order='F', config=config)
+                param_val_masked = group_averaging(param_val_masked, group_info[idx_true_layer])
 
             # update parameter
             sess.run(param_assign_op_i, feed_dict={param_placeholder_i:param_val_masked})
@@ -279,48 +233,8 @@ def update_mask(sess, epoch, learning_rate, threshold, phase, config, group_info
             # update the mask in training process
             # Only update mask at the locations that corresponding to zero valued rows
             if not phase:
-                #4D to 2D
-                mask_reshaped = reshape_2D_4D(mask, target_shape=None, reshape_type=2,
-                                              reshape_order='F', config=config)
-                #prune redundant rows
-                mask_reshaped[zero_row_idx[0], :] = 0
-                #back to 4D
-                mask = reshape_2D_4D(mask_reshaped, target_shape=tuple(dim_i),
-                                           reshape_type=1, reshape_order='F', config=config)
-
+                mask[zero_row_idx[0], :] = 0
                 sess.run(mask_assign_op_i, feed_dict={mask_palceholders_i:mask})
-
-        # for fully connected layer
-        elif np.size(dim_i) == 2:
-            if config['use_growl'] | config['use_group_lasso']:
-
-                # This is the pruning process
-                row_norm = norm(param_val_masked, axis=1)
-                print('min row norm {:.4f}'.format(np.min(row_norm)))
-                print('current epoch {}'.format(epoch+1))
-                if epoch==0 or (epoch+1) % config['row_norm_freq'] == 0:
-                    hist_plot(idx, epoch, phase, row_norm[row_norm>0], config)
-
-                zero_row_idx = np.where(row_norm <=threshold)
-
-                nonzero_row_idx = np.where(row_norm > threshold)
-                np.save(config['plot_dir']+'nonzero_row_idx.npy', nonzero_row_idx)
-
-                print('masked rows: {}; total rows: {}'.format(np.size(zero_row_idx), np.size(row_norm)))
-                param_val_masked[zero_row_idx[0], :] = 0
-
-                # in retraining process, enforce parameter sharing, do not update the mask
-                if phase:
-                    param_val_masked = group_averaging(param_val_masked, group_info[idx_true_layer])
-
-                # update parameter
-                sess.run(param_assign_op_i, feed_dict={param_placeholder_i:param_val_masked})
-
-                # update the mask in training process
-                # Only update mask at the locations that corresponding to zero valued rows
-                if not phase:
-                    mask[zero_row_idx[0], :] = 0
-                    sess.run(mask_assign_op_i, feed_dict={mask_palceholders_i:mask})
 
         layer_nonzero_params = np.count_nonzero(param_val_masked)
         print("update mask of layer: {0}, total:{1}, nonzeros:{2}, uniqs:{3}".format(idx,

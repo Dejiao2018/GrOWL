@@ -20,10 +20,8 @@ FUNCTIONS FOR NEURAL NETWORKS
 LAYERS FOR NEURAL NETWORKS
 	1. batch_normalization_layer
 	2. fully_connected_layer
-	3. convolutional_layer
-	4. relu_layer
-	5. leaky relu layer
-	6. max_pooling_layer
+	3. relu_layer
+	4. leaky relu layer
 '''
 #################################################################################
 
@@ -184,64 +182,6 @@ def fully_connected_layer(x, units, name, gpu, config):
 
 	return h
 
-def convolutional_layer(x, filter_spec, name, gpu, config):
-	'''
-	Args:
-		x: inputs, a 4d tensor.
-		filter: 4-tuple, [filter_height, filter_width, in_channels, out_channels].
-		name: name for this layer.
-
-	Returns:
-		h: convoluted results.
-	'''
-	n = filter_height * filter_width * in_channels
-	with tf.variable_scope(name) as scope:
-		weights = _weights_initializer(name='weights',
-			shape=filter_spec,
-			stddev=np.sqrt(2/n),
-			gpu=gpu,
-			config=config)
-		biases = _biases_initializer(name='biases',
-			shape=filter_spec[3],
-			val=0.1,
-			gpu=gpu,
-			config=config)
-
-		# initilize and apply mask if specified to
-		if config['use_mask']:
-			mask = _mask_initializer(name='mask',
-				shape=filter_spec,
-				gpu=gpu)
-			# Apply mask to the weights
-			masked_weights = tf.multiply(mask, weights, name='masked_weights')
-
-			_parameter_summary(masked_weights)
-			# new_shape = masked_weights.get_shape().as_list()
-			# new_shape.insert(0,1)
-			# new_shape.append(1)
-			# _image_summary(tf.reshape(masked_weights, new_shape))
-
-			# Calculate the output of the convolutional layer
-			h = tf.add(tf.nn.conv2d(x, masked_weights, strides=[1,1,1,1], padding='SAME'), biases, name=name)
-		else:
-			h = tf.add(tf.nn.conv2d(x, weights, strides=[1,1,1,1], padding='SAME'), biases, name=name)
-
-		# Add summary for the weights and outputs
-		_parameter_summary(weights)
-		_output_summary(h)
-
-		# Add interface for OWL/grOWL
-		if config['use_owl'] | config['use_growl'] | config['use_group_lasso'] | config['use_mask']:
-			w_placeholder = tf.placeholder(tf.float32, filter_spec)
-			assign_op_w = tf.assign(weights, w_placeholder, validate_shape=True)
-			tf.add_to_collection('weight_placeholder', (weights, w_placeholder, assign_op_w))
-
-			mask_placeholder = tf.placeholder(tf.float32, filter_spec)
-			assign_op_m = tf.assign(mask, mask_placeholder, validate_shape=True)
-			tf.add_to_collection('mask_placeholder', (mask, mask_placeholder, assign_op_m))
-
-
-	return h
 
 def relu_layer(x, name):
 	'''
@@ -255,17 +195,6 @@ def relu_layer(x, name):
 		h = tf.nn.relu(x, name=name)
 		_output_summary(h)
 
-	return h
-
-def max_pool_2x2(x, name):
-	'''
-	Args:
-		x:inputs.
-
-	Returns:
-		h: results.
-	'''
-	h = tf.nn.max_pool(x, ksize=[1,2,2,1], strides=[1,2,2,1], padding='SAME', name=name)
 	return h
 
 def batch_normalization_layer(x, axis, phase, name):

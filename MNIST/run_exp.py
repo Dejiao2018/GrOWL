@@ -27,7 +27,7 @@ def weight_decay():
         config = yaml.load(f_search)
 
         config['use_growl'] = True
-        config['growl_params']= [[1e-20, 1e-20], [3e-1, 3e-3], [1e1, 1e-2], [1e1, 1e-2], [1e-1, 1e-3]]
+        config['growl_params']= [[1e-20, 1e-20], [3e-1, 3e-3]]
         config['use_group_lasso'] = False
         config['use_wd'] = True
         config['log_dir']= log_dir
@@ -51,7 +51,7 @@ def baseline():
         config = yaml.load(f_search)
 
         config['use_growl'] = False
-        config['growl_params']= [[1e-20, 1e-20], [3e-1, 3e-3], [1e1, 1e-2], [1e1, 1e-2], [1e-1, 1e-3]]
+        config['growl_params']= [[1e-20, 1e-20], [3e-1, 3e-3]]
         config['use_group_lasso'] = False
         config['use_wd'] = True
         config['log_dir']= log_dir

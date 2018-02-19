@@ -1,7 +1,5 @@
 '''
 This module contains functions useful for plotting resutls
-1. imagesc
-2.
 '''
 
 import matplotlib

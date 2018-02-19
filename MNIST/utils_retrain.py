@@ -14,7 +14,6 @@ import utils_nn
 from numpy.linalg import norm
 from sklearn.preprocessing import normalize
 from utils_plot import imagesc
-from utils_general import reshape_2D_4D
 import matplotlib.pyplot as plt
 import yaml
 
@@ -62,29 +61,9 @@ def display_similarity(sess, epoch, get_group, config):
 
         # recover the masked weights to zeros if they drifted
         param_masked = tf.multiply(mask_i, param_i)
+        param_masked_val = sess.run(param_masked)
 
-        if np.size(dim_i) == 2:
-            param_masked_val = sess.run(param_masked)
-        elif np.size(dim_i) == 4:
-            param_masked_4D = sess.run(param_masked)
-            param_masked_val = reshape_2D_4D(param_masked_4D, target_shape=None,
-                                           reshape_type=2, reshape_order='F', config=config)
-
-        if config['similarity'] == 'cosine':
-            #normalize each row
-            param_normalize_val_raw =  normalize(param_masked_val, axis=1)
-            param_normalize_val = np.maximum(param_normalize_val_raw, 1e-12)
-            row_norm = norm(param_normalize_val, axis=1)
-            num_nonzero_rows = np.count_nonzero(row_norm)
-            nonzero_row_idx = np.flatnonzero(row_norm)
-
-            # cosine similarity
-            similarity_val = np.dot(param_normalize_val, param_normalize_val.T)
-
-            #In this case, display_similarity_val equals to similarity_val
-            display_similarity_val = similarity_val
-
-        elif config['similarity'] == 'norm_euclidean':
+        if config['similarity'] == 'norm_euclidean':
             # first retrieve nonzero rows from the parameter matrix
             row_norm = norm(param_masked_val, axis=1)
             row_norm[row_norm < threshold] = 0 # remove very small row norms

@@ -19,7 +19,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-from networks import LeNet_single, LeNet_300_100, LeNet_cnn
+from networks import LeNet_single
 from utils_OWL import reg_params_init, apply_owl_prox, update_mask
 from utils_plot import imagesc, cluster_plot, accuracy_compression_plot
 from utils_retrain import display_similarity

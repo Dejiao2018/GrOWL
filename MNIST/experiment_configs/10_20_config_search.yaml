@@ -23,12 +23,12 @@ num_epochs_per_decay: 10
 # OWL params setup
 # the type of OWL parameters, currently we are using OSCAR, but other types
 # may be implemented in the future
-# reg_params_type: 'OSCAR' # options: OSCAR, PLD
-reg_params_type: 'OSCAR'
+# reg_params_type
+reg_params_type: 'PLD'
 PLD_transition: 0.3 # the ratio of linear decreasing region. If use 0, then use the number of rows which is equal to the row number of the layer with minimum rows
 preference: 0.6
 
-owl_applied_layers: [True, False, False, False, False]
+owl_applied_layers: [True, False]
 prox_update_iter: False # if set to true, will update every iterations, otherwise every epoch
 
 # regularization parameters support value for OSCAR type
@@ -45,11 +45,6 @@ growl_params: [[87e0, 0.7], [5e0, 5e-2], [1e1, 1e-2], [1e1, 1e-2], [1e-1, 1e-3]]
 
 grid_search_reg_params: False
 
-# convolutional filter regularization type
-# 1: regularization across neurons
-# 2: regularization acorss channels in each neuron
-# many other possibilities exists!!!
-conv_reg_type: 3 #[1,2,3,4] corresponding with [channel_growl, input_depth_growl, filter_growl, arbitrary_filter]
 # Retraining related
 similarity: 'norm_euclidean' # current options: cosine, euclidean, norm_euclidean
 
