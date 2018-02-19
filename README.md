@@ -35,3 +35,5 @@ Numpy 1.14.0
 Scipy 1.0.0  
 Matplotlib 2.1.0  
 Scikit-learn 0.19.1  
+
+Our code are implemented on Ubuntu 16.04.3.
