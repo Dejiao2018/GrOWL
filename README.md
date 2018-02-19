@@ -9,10 +9,11 @@ https://openreview.net/pdf?id=rypT3fb0b
    gcc -fPIC -shared -o libprox.so proxSortedL1.c
 
 ### 2. VGG on Cifar10 (VGG folder)
-    python vgg_main.py (reproduce table 2)
-    python run_expr.py (reproduce table 4)
+    python vgg_main.py 
     
     You can switch to different regularizers by changing the configuration info in "flags.py"
+    All configuration settings are in vgg_main.py and flag.py
+    Some of the hyperparameters are described in the table, e.g., preference value
 
 ### 3. Fully connected network on MNIST (MNIST folder)
     python run_exp.py (reproduce results in table 1)
