@@ -11,14 +11,15 @@ https://openreview.net/pdf?id=rypT3fb0b
 ### 2. VGG on Cifar10 (VGG folder)
     python vgg_main.py 
     
-    You can switch to different regularizers by changing the configuration info in "flags.py"
-    All configuration settings are in vgg_main.py and flag.py
+    You can switch to different regularizers by changing the configuration info in "flags.py"  
+    All configuration settings are in vgg_main.py and flag.py  
     Some of the hyperparameters are described in the table, e.g., preference value
 
 ### 3. Fully connected network on MNIST (MNIST folder)
     python run_exp.py (reproduce results in table 1)
     
-    All available configuration settings are contained in experiment_config folders, you can modify the settings either in the .yaml file "10_20_config_search.yaml" or in the "run_exp.py" script.
+    All available configuration settings are contained in experiment_config folders,   
+    you can modify the settings either in the .yaml file "10_20_config_search.yaml" or in the "run_exp.py" script.
 
 ### 4. Plots (Plots folder)
     python gen_fig4.py (generate figure 4)
