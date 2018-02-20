@@ -53,7 +53,7 @@ def baseline():
         config['use_growl'] = False
         config['growl_params']= [[1e-20, 1e-20], [3e-1, 3e-3]]
         config['use_group_lasso'] = False
-        config['use_wd'] = True
+        config['use_wd'] = False
         config['log_dir']= log_dir
         lr = 1e-3
         config['learning_rate'] = lr
@@ -61,9 +61,7 @@ def baseline():
         config['num_epochs'] = 400
         config['retraining'] = False
 
-        wd = [0.01] * 5
-        for i, wd_i in enumerate(wd):
-            config['wd'] = wd[i]
+        for i in range(5):
             config['res_dir'] = config['log_dir'] + '/baseline_idx_{}'.format(i)
             config['plot_dir'] = config['res_dir'] + '/plot_res'
             config['summary_dir'] = config['res_dir'] + '/summary_res'
@@ -89,27 +87,6 @@ def group_lasso():
             config['plot_dir'] = config['res_dir'] + '/plot_res'
             config['summary_dir'] = config['res_dir'] + '/summary_res'
             train_mnist(config)
-
-def OSCAR():
-
-    with open('./experiment_configs/10_20_config_search.yaml', 'r+') as f_search:
-        config = yaml.load(f_search)
-
-        config['use_growl'] = True
-        config['use_group_lasso'] = False
-        config['use_wd'] = False
-        config['reg_params_type'] = 'OSCAR'
-
-        lambda1 = np.linspace(1, 1, 1)
-        lambda2 = np.linspace(1e-2, 3e-2, 3)
-
-        for idx1, lambda1_i in enumerate(lambda1):
-            for idx2, lambda2_i in enumerate(lambda2):
-                config['growl_params'] = [[lambda1_i, lambda2_i]] * NUM_LAYER
-                config['res_dir'] = config['log_dir'] + '/OSCAR_l1_{}_l2_{}'.format(lambda1_i, lambda2_i)
-                config['plot_dir'] = config['res_dir'] + '/plot_res'
-                config['summary_dir'] = config['res_dir'] + '/summary_res'
-                train_mnist(config)
 
 def PLD():
 
