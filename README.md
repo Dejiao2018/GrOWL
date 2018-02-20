@@ -5,7 +5,7 @@ Dejiao Zhang*, Haozhu Wang*, Mario Figueiredo, Laura Balzano (*Co-first author)
 https://openreview.net/pdf?id=rypT3fb0b
 
 ## To run the code:
-### 1. Complie the the c code in ./owl_projection by the following:
+### 1. Compile the c code in ./owl_projection by the following:
    gcc -fPIC -shared -o libprox.so proxSortedL1.c
 
 ### 2. VGG on Cifar10 (VGG folder)
