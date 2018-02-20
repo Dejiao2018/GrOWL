@@ -36,4 +36,4 @@ Scipy 1.0.0
 Matplotlib 2.1.0  
 Scikit-learn 0.19.1  
 
-Our experiments were done on Ubuntu 16.04.3.
+Our experiments were done on Ubuntu 16.04.3 LTS.
