@@ -1,5 +1,5 @@
 # GrOWL
-## Learning to share: simultaneously parameter tying and sparsification in deep learning
+## Learning to share: simultaneous parameter tying and sparsification in deep learning
 
 Dejiao Zhang*, Haozhu Wang*, Mario Figueiredo, Laura Balzano (*Co-first author)  
 https://openreview.net/pdf?id=rypT3fb0b
