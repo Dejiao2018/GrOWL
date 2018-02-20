@@ -69,9 +69,9 @@ flags.DEFINE_float('preference', 0.8,
 
 flags.DEFINE_integer('batch_size', 128,
                             'Batch size.')
-flags.DEFINE_integer('num_training_epochs', 15,
+flags.DEFINE_integer('num_training_epochs', 150,
                             'number of training epochs.')
-flags.DEFINE_integer('num_retraining_epochs',5,
+flags.DEFINE_integer('num_retraining_epochs',50,
                             'number of retraining epochs.')
 flags.DEFINE_float('training_lr_init', 1e-2,
                          'initial learning rate for the training process')
@@ -79,8 +79,8 @@ flags.DEFINE_float('retraining_lr_init', 1e-3,
                         'initial learning rate for the retraining process')
 flags.DEFINE_float('lr_decay_rate', 0.1,
                         'learning rate decay factor')
-flags.DEFINE_float('lr_decay_step', 6*390, "decay the learning rate every several steps")
-flags.DEFINE_float('retrain_lr_decay_step', 2*390, "decay the learning rate every several steps")
+flags.DEFINE_float('lr_decay_step', 60*390, "decay the learning rate every several steps")
+flags.DEFINE_float('retrain_lr_decay_step', 20*390, "decay the learning rate every several steps")
 
 
 flags.DEFINE_integer('eval_batch_count', 100,
@@ -115,13 +115,13 @@ flags.DEFINE_string('PLD_transition', 0.1, '[0,1]')
 
 
 #Display, Save, Summary frequencies
-flags.DEFINE_integer('display_similarity_freq', 390*2,
+flags.DEFINE_integer('display_similarity_freq', 390*20,
                      'frequency of displaying the similarity plots of each layer')
 flags.DEFINE_integer('tensorboard_freq', 390,
                      'frequency of writing summaries to tensorboard')
-flags.DEFINE_integer('checkpoint_freq', 390*4,
+flags.DEFINE_integer('checkpoint_freq', 390*40,
                      'frequency of saving model')
-flags.DEFINE_integer('checkpoint_freq_retrain', 390*2,
+flags.DEFINE_integer('checkpoint_freq_retrain', 390*20,
                      'frequency of saving model')
-flags.DEFINE_integer('row_norm_freq', 390*2, 'frequency of writing the histogram of the row norms')
+flags.DEFINE_integer('row_norm_freq', 390*20, 'frequency of writing the histogram of the row norms')
 flags.DEFINE_integer('eval_freq', 390, 'frequency of evaluation')

@@ -318,16 +318,34 @@ def main(argv=None):
     batch_size = 128
     num_classes = 10
 
-    #Create heyperparameters and results dictionary
+    #GrOWL + L2
     reg_params=np.array([[100, 100],[4.5, 1e-1],[11, 1e-1],[11, 1e-1],[11, 1e-1],
                         [10, 1e-1],[9, 1e-1],[7.5, 1e-1],[7.0, 1e-1],[6.5, 7e-2],
                         [5.5, 5e-2],[5.5, 1e-1],[3.5, 1e-1],[3.5, 1e-1],[100,100]])
+    
+    #GrOWL
+    # reg_params=np.array([[100, 100],[4.5, 1e-1],[11, 1e-1],[11, 1e-1],[11, 1e-1],
+    #                     [10, 1e-1],[9, 1e-1],[8, 1e-1],[7.0, 1e-1],[6.5, 7e-2],
+    #                     [5.5, 5e-2],[5.5, 1e-1],[3.5, 1e-1],[3.5, 1e-1],[100,100]])
+
+    #GrLasso + L2
+    # reg_params=np.array([[100, 100],[4.6, 0],[10.9, 0],[10.9, 0],[10.9, 0],
+    #                     [9.2, 0],[9.2, 0],[7.5, 0],[5.8, 0],[4.6, 0],
+    #                     [4.0, 0],[3.5, 0],[2.9, 0],[2.9, 0],[100,100]], dtype=np.float32)
+
+    #GrLasso
+    # reg_params=np.array([[100, 0],[4.8, 0],[11.4, 0],[11.4, 0],[11.4, 0],
+    #                             [9.6, 0],[9.6, 0],[7.8, 0],[6.0, 0],[4.8, 0],
+    #                             [4.2, 0],[3.6, 0],[3.0, 0],[3.0, 0],[100,0]], dtype=np.float32)
+
+
+
 
     # 1 and 15 no reg, 2-14 reg
     reg_applied_layers = [False, True, True, True, True,
                           True, True, True, True, True,
                           True, True, True, True, False]
-
+    #Create heyperparameters and results dictionary
     hps, res_dict=preprocess_hparam(batch_size=batch_size,
                                          num_classes=num_classes,
                                          reg_params=reg_params,
