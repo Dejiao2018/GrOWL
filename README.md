@@ -13,7 +13,7 @@ https://openreview.net/pdf?id=rypT3fb0b
     
     You can switch to different regularizers by changing the configuration info in "flags.py"  
     All configuration settings are in vgg_main.py and flag.py  
-    Some of the hyperparameters are described in the table, e.g., preference value
+    Some of the hyperparameters are described in the table in our paper, e.g., preference value
 
 ### 3. Fully connected network on MNIST (MNIST folder)
     python run_exp.py (reproduce results in table 1)
