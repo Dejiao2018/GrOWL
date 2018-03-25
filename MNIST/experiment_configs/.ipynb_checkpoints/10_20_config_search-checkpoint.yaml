@@ -1,0 +1,66 @@
+use_owl: False
+use_growl: True
+use_group_lasso: False
+use_mask: True
+
+# weight decay
+use_wd: False
+wd: 0.001
+
+n_input: 784
+n_class: 10
+
+batch_size: 128
+num_epochs: 300
+# Retraining
+retraining: True
+num_epochs_retrain: 100
+
+learning_rate: 0.0001
+learning_rate_decay_factor: 0.96
+num_epochs_per_decay: 10
+
+# OWL params setup
+# the type of OWL parameters, currently we are using OSCAR, but other types
+# may be implemented in the future
+# reg_params_type
+reg_params_type: 'PLD'
+PLD_transition: 0.3 # the ratio of linear decreasing region. If use 0, then use the number of rows which is equal to the row number of the layer with minimum rows
+preference: 0.6
+
+owl_applied_layers: [True, False]
+prox_update_iter: False # if set to true, will update every iterations, otherwise every epoch
+
+# regularization parameters support value for OSCAR type
+# w = \lambda_{1} + \lamdba_{2}(n-i)
+# number of sublists is equal to the total number of layers
+# the first element in each list is \lambda_{1}, the second element is \lambda_{2}
+
+# Single hidden layer or 300-100 layer
+growl_params: [[87e0, 0.7], [5e0, 5e-2], [1e1, 1e-2], [1e1, 1e-2], [1e-1, 1e-3]]
+
+# # Baseline parameters
+# owl_params: [[5e-20, 5e-30], [5e-20, 5e-30], [5e-20, 5e-30],[5e-20, 5e-30],[5e-20, 5e-30]]
+# growl_params: [[5e-20, 5e-30], [5e-20, 5e-30], [5e-20, 5e-30], [5e-20, 5e-30], [5e-20, 5e-30]]
+
+grid_search_reg_params: False
+
+# Retraining related
+similarity: 'norm_euclidean' # current options: cosine, euclidean, norm_euclidean
+
+#
+mask_update_freq: 1
+display_prune_total: True
+display_similarity: 50
+row_norm_freq: 50
+
+# % if turned on, then perform clustering every display_similarity epochs, otherwise only do the clustering at the end training. Turn this off to speed up training when there are many rows.
+# train_cluster: False
+
+plot_dir: '../../results/plots/mnist/10_21/single/group_lasso_4/'
+
+summary_dir: '../../results/summaries/mnist/10_21/single/group_lasso_4/'
+
+log_dir: '../../experiment_results/12_18_mnist_regs/'
+
+tensorboard_freq: 200
