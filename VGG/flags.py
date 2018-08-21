@@ -110,7 +110,7 @@ flags.DEFINE_boolean('use_growl', True,
 flags.DEFINE_boolean('use_group_lasso', False,
                      'use group Lasso or not')
 
-flags.DEFINE_string('PLD_transition', 0.1, '[0,1]')
+flags.DEFINE_float('PLD_transition', 0.1, '[0,1]')
 
 
 
